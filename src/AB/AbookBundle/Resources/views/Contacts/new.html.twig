@@ -1,15 +1,23 @@
-{% extends '::base.html.twig' %}
+{% extends "AbookBundle:Layout:layout.html.twig" %}
+
+{% block title %}Add Contact{% endblock %}
 
 {% block body -%}
-    <h1>Contacts creation</h1>
 
-    {{ form(form) }}
+<section class="col col-lg-8">
+    <fieldset>
+        <legend>Contacts Edit</legend>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('contacts') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+            {{ form_start(form) }}
+
+                {{ form_row(form.emails) }}
+
+            {{ form_end(form) }}
+
+    </fieldset>
+</section>
+
+<style type="text/css">
+    label { margin-top: 5px; margin-bottom: 5px }
+</style>
 {% endblock %}

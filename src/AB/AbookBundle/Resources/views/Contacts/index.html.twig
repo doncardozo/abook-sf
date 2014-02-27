@@ -1,49 +1,59 @@
-{% extends '::base.html.twig' %}
+{% extends "AbookBundle:Layout:layout.html.twig" %}
+
+{% block title %}Welcome!{% endblock %}
 
 {% block body -%}
-    <h1>Contacts list</h1>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Address</th>
-                <th>Active</th>
-                <th>Deleted</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('contacts_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.firstName }}</td>
-                <td>{{ entity.lastName }}</td>
-                <td>{{ entity.address }}</td>
-                <td>{{ entity.active }}</td>
-                <td>{{ entity.deleted }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('contacts_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('contacts_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
+<section class="col col-lg-12">
+    <fieldset>
+        <legend>List Contacts</legend>
+
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Address</th>
+                    <th>Active</th>
+                    <th style="width:255px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('contacts_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                    <td>{{ entity.firstName }}</td>
+                    <td>{{ entity.lastName }}</td>
+                    <td>{{ entity.address }}</td>
+                    <td>{% if entity.active == 1 %} Yes {% else %} No {% endif %}</td>
+                    <td>
+                        <ul class="record_actions">
+                            <li>
+                                <a class="btn btn-primary" href="{{ path('contacts_show', { 'id': entity.id }) }}">show</a>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary" href="{{ path('contacts_edit', { 'id': entity.id }) }}">edit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
         {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </fieldset>
+</section>
+<style type="text/css">
+    .record_actions { 
+        padding-left: 20px;
+        margin-bottom: 0px;
+    }
+    .record_actions li { display: inline-block }
+    .btn-primary { 
+        padding-bottom: 0px; 
+        padding-top: 0px; 
+    }
+</style>
 
-        <ul>
-        <li>
-            <a href="{{ path('contacts_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+
     {% endblock %}
