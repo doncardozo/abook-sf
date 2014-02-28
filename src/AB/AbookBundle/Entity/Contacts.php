@@ -3,12 +3,12 @@
 namespace AB\AbookBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Contacts
  *
- * @ORM\Table(name="contacts", indexes={@ORM\Index(name="IDX_CA36772512469DE2", columns={"category_id"})})
- * @ORM\Entity
+ * @ORM\Table(name="contacts", indexes={@ORM\Index(name="fk_Contacts_Categories_idx", columns={"category_id"})})
+ * @ORM\Entity(repositoryClass="AB\AbookBundle\Entity\Repository\ContactsRepository")
  */
 class Contacts
 {
@@ -47,14 +47,14 @@ class Contacts
      *
      * @ORM\Column(name="active", type="boolean", nullable=true)
      */
-    private $active;
+    private $active = '1';
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="deleted", type="boolean", nullable=true)
      */
-    private $deleted;
+    private $deleted = '0';
 
     /**
      * @var \Categories
@@ -67,7 +67,17 @@ class Contacts
     private $category;
 
 
-
+    private $emails;
+    
+    
+    private $phones;
+    
+    
+    public function __construct() {
+        $this->emails = new ArrayCollection();
+        $this->phones = new ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -150,12 +160,12 @@ class Contacts
     /**
      * Set active
      *
-     * @param boolean $active
+     * @param int $active
      * @return Contacts
      */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
@@ -167,7 +177,7 @@ class Contacts
      */
     public function getActive()
     {
-        return $this->active;
+        return (bool)$this->active;
     }
 
     /**
@@ -215,4 +225,22 @@ class Contacts
     {
         return $this->category;
     }
+    
+    public function getEmails() {
+        return $this->emails;
+    }
+
+    public function getPhones() {
+        return $this->phones;
+    }
+
+    public function setEmails($emails) {          
+        $this->emails->add($emails);
+    }
+
+    public function setPhones($phones) {
+        $this->phones->add($phones);
+    }
+
+
 }

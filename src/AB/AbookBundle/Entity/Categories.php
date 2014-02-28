@@ -33,14 +33,14 @@ class Categories
      *
      * @ORM\Column(name="active", type="boolean", nullable=true)
      */
-    private $active;
+    private $active = '1';
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="deleted", type="boolean", nullable=true)
      */
-    private $deleted;
+    private $deleted = '0';
 
 
 

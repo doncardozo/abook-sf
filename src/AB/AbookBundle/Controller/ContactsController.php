@@ -29,7 +29,7 @@ class ContactsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AbookBundle:Contacts')->findAll();
+        $entities = $em->getRepository('AbookBundle:Contacts')->fetchAll();
 
         return array(
             'entities' => $entities,
@@ -49,11 +49,11 @@ class ContactsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('contacts_show', array('id' => $entity->getId())));
+            $em = $this->getDoctrine()->getManager();
+            $id = $em->getRepository('AbookBundle:Contacts')->create($entity);
+            
+            return $this->redirect($this->generateUrl('contacts_show', array('id' => $id)));
         }
 
         return array(

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ContactsEmails
  *
- * @ORM\Table(name="contacts_emails", indexes={@ORM\Index(name="IDX_81445949E7A1254A", columns={"contact_id"})})
+ * @ORM\Table(name="contacts_emails", indexes={@ORM\Index(name="fk_contacts_emails_Contacts1_idx", columns={"contact_id"})})
  * @ORM\Entity
  */
 class ContactsEmails
@@ -33,14 +33,14 @@ class ContactsEmails
      *
      * @ORM\Column(name="active", type="boolean", nullable=true)
      */
-    private $active;
+    private $active = '1';
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="deleted", type="boolean", nullable=true)
      */
-    private $deleted;
+    private $deleted = '0';
 
     /**
      * @var \Contacts
