@@ -181,7 +181,7 @@ class ContactsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AbookBundle:Contacts')->find($id);
-
+        exit();
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Contacts entity.');
         }

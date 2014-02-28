@@ -234,7 +234,7 @@ class Contacts
         return $this->phones;
     }
 
-    public function setEmails($emails) {          
+    public function setEmails(ContactsEmails $emails) {          
         $this->emails->add($emails);
     }
 

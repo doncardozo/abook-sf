@@ -3,6 +3,7 @@
 namespace AB\AbookBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class ContactsRepository extends EntityRepository {
 
@@ -22,6 +23,34 @@ class ContactsRepository extends EntityRepository {
 SQL;
         return $em->fetchAll($select);        
     }
+    
+    public function fetchById($id) {
+
+        $em = $this->getEntityManager()->getConnection();
+
+        $select_entity = <<<SQL
+                select 
+                    id,
+                    first_name firstName,
+                    last_name lastName,
+                    address address,
+                    active                                     
+                from contacts 
+                    where 
+                        id = {$id}
+                        active = 1 and deleted = 0;
+    
+SQL;
+                        
+        $result = $em->fetchAll($select);        
+        
+        
+        
+    }
+    
+    public function update($id){
+        
+    }    
     
     public function create(\AB\AbookBundle\Entity\Contacts $entity){
         
@@ -75,6 +104,41 @@ SQL;
         } catch (Exception $ex) {
             $em->rollBack();
         }
+        
+    }
+    
+    public function fetchEmaisByContactId($id){
+        
+        $select = <<<SQL
+                select 
+                    id,
+                    email,  
+                    contact_id contact
+                    active                                     
+                from contacts_emails 
+                    where 
+                        id = 1 and
+                        active = 1 and deleted = 0;
+    
+SQL;
+    
+    }
+    
+    public function fetchPhonesByContactId($id){
+        
+        $select = <<<SQL
+                select 
+                    id,
+                    phone_number phoneNumber,  
+                    contact_id contact
+                    active                                     
+                from contacts_phones 
+                    where 
+                        id = 1 and
+                        active = 1 and deleted = 0;
+    
+SQL;
+        
         
     }
 

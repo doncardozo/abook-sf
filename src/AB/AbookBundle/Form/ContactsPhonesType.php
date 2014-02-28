@@ -15,7 +15,7 @@ class ContactsPhonesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('phoneNumber')
+            ->add('phoneNumber', 'text', array('attr'=>array("class"=>"form-control")))
             #->add('active')
             #->add('deleted')
             #->add('contact')
