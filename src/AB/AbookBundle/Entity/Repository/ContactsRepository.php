@@ -3,7 +3,6 @@
 namespace AB\AbookBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class ContactsRepository extends EntityRepository {
 
@@ -21,94 +20,109 @@ class ContactsRepository extends EntityRepository {
                 from contacts where active = 1 and deleted = 0;
     
 SQL;
-        return $em->fetchAll($select);        
+        return $em->fetchAll($select);
     }
-    
-    public function fetchById($id) {
 
-        $em = $this->getEntityManager()->getConnection();
+    public function update(\AB\AbookBundle\Entity\Contacts $entity) {
 
-        $select_entity = <<<SQL
-                select 
-                    id,
-                    first_name firstName,
-                    last_name lastName,
-                    address address,
-                    active                                     
-                from contacts 
-                    where 
-                        id = {$id}
-                        active = 1 and deleted = 0;
-    
-SQL;
-                        
-        $result = $em->fetchAll($select);        
-        
-        
-        
-    }
-    
-    public function update($id){
-        
-    }    
-    
-    public function create(\AB\AbookBundle\Entity\Contacts $entity){
-        
         $em = $this->getEntityManager()->getConnection();
         $em->beginTransaction();
-        
+        return "ok";
         try {
-            
+
+            # Contacts
+            $em->update("contacts", array(
+                "first_name" => $entity->getFirstName(),
+                "last_name" => $entity->getLastName(),
+                "address" => $entity->getAddress(),
+                "category_id" => $entity->getCategory()->getId(),
+                "active" => $entity->getActive()
+            ));
+
+            $id = $em->lastInsertId();
+
+            # Emails
+            foreach ($entity->getEmails() as $listEmails) {
+
+                foreach ($listEmails as $email) {
+
+                    $em->insert("contacts_emails", array(
+                        "contact_id" => $id,
+                        "email" => $email->getEmail()
+                    ));
+                }
+            }
+
+            # Phones
+            foreach ($entity->getPhones() as $listPhones) {
+
+                foreach ($listPhones as $phone) {
+
+                    $em->insert("contacts_phones", array(
+                        "contact_id" => $id,
+                        "phone_number" => $phone->getPhoneNumber()
+                    ));
+                }
+            }
+
+            $em->commit();
+            return $id;
+        } catch (Exception $ex) {
+            $em->rollBack();
+        }
+    }
+
+    public function create(\AB\AbookBundle\Entity\Contacts $entity) {
+
+        $em = $this->getEntityManager()->getConnection();
+        $em->beginTransaction();
+
+        try {
+
             # Contacts
             $em->insert("contacts", array(
                 "first_name" => $entity->getFirstName(),
                 "last_name" => $entity->getLastName(),
                 "address" => $entity->getAddress(),
                 "category_id" => $entity->getCategory()->getId(),
-                "active" => $entity->getActive()                
+                "active" => $entity->getActive()
             ));
-            
-            $id = $em->lastInsertId();
- 
-            # Emails
-            foreach($entity->getEmails() as $listEmails){
 
-                foreach ($listEmails as $email){
-                    
+            $id = $em->lastInsertId();
+
+            # Emails
+            foreach ($entity->getEmails() as $listEmails) {
+
+                foreach ($listEmails as $email) {
+
                     $em->insert("contacts_emails", array(
                         "contact_id" => $id,
                         "email" => $email->getEmail()
                     ));
-                    
-                }                
-                
+                }
             }
- 
-            # Phones
-            foreach($entity->getPhones() as $listPhones){
 
-                foreach ($listPhones as $phone){
-                    
+            # Phones
+            foreach ($entity->getPhones() as $listPhones) {
+
+                foreach ($listPhones as $phone) {
+
                     $em->insert("contacts_phones", array(
                         "contact_id" => $id,
                         "phone_number" => $phone->getPhoneNumber()
                     ));
-                    
-                }                
-                
+                }
             }
-            
+
             $em->commit();
             return $id;
-            
         } catch (Exception $ex) {
             $em->rollBack();
         }
-        
     }
-    
-    public function fetchEmaisByContactId($id){
-        
+
+    public function fetchEmaisByContactId($id) {
+
         $select = <<<SQL
                 select 
                     id,
@@ -121,11 +135,10 @@ SQL;
                         active = 1 and deleted = 0;
     
 SQL;
-    
     }
-    
-    public function fetchPhonesByContactId($id){
-        
+
+    public function fetchPhonesByContactId($id) {
+
         $select = <<<SQL
                 select 
                     id,
@@ -138,8 +151,6 @@ SQL;
                         active = 1 and deleted = 0;
     
 SQL;
-        
-        
     }
 
 }

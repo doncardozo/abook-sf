@@ -67,9 +67,14 @@ class Contacts
     private $category;
 
 
+    /**
+     * @var Doctrine\Common\Collections\ArrayCollection 
+     */
     private $emails;
     
-    
+    /**
+     * @var Doctrine\Common\Collections\ArrayCollection 
+     */
     private $phones;
     
     
@@ -229,18 +234,35 @@ class Contacts
     public function getEmails() {
         return $this->emails;
     }
+    
+    public function addEmail(\AB\AbookBundle\Entity\ContactsEmails $email) {     
+        
+        $email->setContact($this);
+        if(!$this->emails instanceof ArrayCollection){
+            $this->emails = new ArrayCollection();
+        }
+        $this->emails->add($email);
+    }
+    
+    public function removeEmail(\AB\AbookBundle\Entity\ContactsEmails $email){
+        $this->emails->removeElement($email);
+    }
 
     public function getPhones() {
         return $this->phones;
     }
-
-    public function setEmails(ContactsEmails $emails) {          
-        $this->emails->add($emails);
+    
+    public function addPhone(\AB\AbookBundle\Entity\ContactsPhones $phone) {
+        
+        $phone->getContact($this);        
+        if(!$this->phones instanceof ArrayCollection){
+            $this->phones = new ArrayCollection();
+        }
+        
+        $this->phones->add($phone);
     }
-
-    public function setPhones($phones) {
-        $this->phones->add($phones);
+    
+    public function removePhone(\AB\AbookBundle\Entity\ContactsPhone $phone){
+        $this->phones->removeElement($phone);
     }
-
-
 }

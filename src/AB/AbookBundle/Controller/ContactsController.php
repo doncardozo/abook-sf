@@ -181,18 +181,20 @@ class ContactsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AbookBundle:Contacts')->find($id);
-        exit();
+                
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Contacts entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
+        
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
-
+            
+            $status = $em->getRepository('AbookBundle:Contacts')->update($entity);
+            
             return $this->redirect($this->generateUrl('contacts_edit', array('id' => $id)));
         }
 
