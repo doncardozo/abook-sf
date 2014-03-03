@@ -23,11 +23,31 @@ SQL;
         return $em->fetchAll($select);
     }
 
+    public function fetchById($id) {
+
+        $em = $this->getEntityManager()->getConnection();
+
+        $select = <<<SQL
+                select 
+                    id,
+                    first_name firstName,
+                    last_name lastName,
+                    address address,
+                    active                                     
+                from contacts 
+                    where 
+                        id = {$id}
+                        active = 1 and deleted = 0;
+    
+SQL;
+        return $em->fetchAll($select);
+    }
+
     public function update(\AB\AbookBundle\Entity\Contacts $entity) {
 
         $em = $this->getEntityManager()->getConnection();
         $em->beginTransaction();
-        return "ok";
+
         try {
 
             # Contacts
@@ -37,36 +57,59 @@ SQL;
                 "address" => $entity->getAddress(),
                 "category_id" => $entity->getCategory()->getId(),
                 "active" => $entity->getActive()
+            ),array(
+                "id" => $entity->getId()
             ));
 
-            $id = $em->lastInsertId();
-
             # Emails
-            foreach ($entity->getEmails() as $listEmails) {
+            if(!is_null($entity->getEmails())){
+                
+                foreach ($entity->getEmails() as $email) {
 
-                foreach ($listEmails as $email) {
-
-                    $em->insert("contacts_emails", array(
-                        "contact_id" => $id,
+                    $em->update("contacts_emails", array(                        
                         "email" => $email->getEmail()
+                    ), array(
+                        "id" => $email->getId()
                     ));
+
                 }
             }
-
+            
             # Phones
-            foreach ($entity->getPhones() as $listPhones) {
+            if(!is_null($entity->getPhones())){
+                
+                $contactsPhones = $this->fetchPhonesByContactId($entity->getId()); 
+                
+                if(sizeof($contactsPhones) == 0){
+                    #insert
+                    foreach ($entity->getPhones() as $phone) {
 
-                foreach ($listPhones as $phone) {
-
-                    $em->insert("contacts_phones", array(
-                        "contact_id" => $id,
-                        "phone_number" => $phone->getPhoneNumber()
-                    ));
+                        $em->insert("contacts_phones", array(      
+                            "contact_id" => $entity->getId(),
+                            "phone_number" => $phone->getPhoneNumber(),
+                            "deleted" => 0
+                        ));
+                            
+                    }
                 }
-            }
+                else {
+                    #update
+                    foreach ($entity->getPhones() as $phone) {
 
+                        $em->update("contacts_phones", array(                        
+                            "phone_number" => $phone->getPhoneNumber()
+                        ), array(
+                            "id" => $phone->getId()
+                        ));
+
+                    }    
+                }                
+                
+            }
+            
             $em->commit();
-            return $id;
+            return $entity->getId();
+            
         } catch (Exception $ex) {
             $em->rollBack();
         }
@@ -127,14 +170,16 @@ SQL;
                 select 
                     id,
                     email,  
-                    contact_id contact
+                    contact_id contact,
                     active                                     
                 from contacts_emails 
                     where 
-                        id = 1 and
+                        id = {$id} and
                         active = 1 and deleted = 0;
     
 SQL;
+        $em = $this->getEntityManager()->getConnection();
+        return $em->fetchAll($select);
     }
 
     public function fetchPhonesByContactId($id) {
@@ -143,14 +188,27 @@ SQL;
                 select 
                     id,
                     phone_number phoneNumber,  
-                    contact_id contact
+                    contact_id contact,
                     active                                     
                 from contacts_phones 
                     where 
-                        id = 1 and
+                        id = {$id} and
                         active = 1 and deleted = 0;
     
 SQL;
+        $em = $this->getEntityManager()->getConnection();    
+        $result = $em->fetchAll($select);
+        
+        $phones = new \AB\AbookBundle\Entity\ContactsPhones();
+        
+        foreach($result as $r){
+            $phones->setId($r['id']);
+            $phones->setPhoneNumber($r['phoneNumber']);
+            $phones->setContact($r['contact']);
+            $phones->setActive($r['active']);                   
+        }
+        
+        return $phones;
     }
 
 }

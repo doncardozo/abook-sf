@@ -15,12 +15,10 @@ class ContactsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attr = array("attr" => array("class" => "form-control"));
-
         $builder
-                ->add('firstName', 'text', $attr)
-                ->add('lastName', 'text', $attr)
-                ->add('address', 'text', $attr)                
+                ->add('firstName')
+                ->add('lastName')
+                ->add('address')
         ;
 
         $builder->add("emails", "collection", array(
@@ -40,24 +38,18 @@ class ContactsType extends AbstractType
         ));
         
         # Category dropdown
-        $cat = array(
+        $builder->add('category', 'entity', array(
             'class' => 'AbookBundle:Categories',
             'property' => 'name',
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder("c");
             }
-        );                
-        $cat = array_merge($cat, $attr);        
-        $builder->add('category', 'entity', $cat);
+        ));
         
         # Active checkbox                
         $builder->add('active', 'checkbox', array(
-                        "required"=>false,
-                        "attr" => array(
-                                "class" => "form-control",
-                                "style"=>"width:13px; height: 13px; margin-top:0px"
-                            )
-                        ));
+            'required'=>false
+        ));
     }
     
     /**

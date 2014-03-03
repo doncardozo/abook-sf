@@ -10,11 +10,11 @@
 
             {{ form_start(form) }}
 
-                {{ form_row(form.firstName) }}
-                {{ form_row(form.lastName) }}
-                {{ form_row(form.address) }}
-                {{ form_row(form.category) }}
-                {{ form_row(form.active) }}
+                {{ form_row(form.firstName, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(form.lastName, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(form.address, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(form.category, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(form.active, { 'attr':{'class':'form-control'} }) }}
 
                 <ul class="tags" data-prototype="{{ form_widget(form.emails.vars.prototype)|e }}">
                     {{ form_widget(form.emails.vars.prototype.email)|e }}
@@ -24,6 +24,8 @@
                     {{ form_widget(form.phones.vars.prototype.phoneNumber)|e }}
                 </ul><br />
 
+                {{ form_row(form.submit, { 'attr':{'class':'btn btn-primary'} }) }}
+                
             {{ form_end(form) }}
 
     </fieldset>

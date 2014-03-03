@@ -52,7 +52,9 @@ class ContactsPhones
      */
     private $contact;
 
-
+    public function setId($id){
+        $this->id = $id;
+    }
 
     /**
      * Get id

@@ -35,20 +35,22 @@
 
     </fieldset>
 
-    <ul class="record_actions">
-        <li>
+    <div class="btn btn-group">
+        <div>
             <a class="btn btn-primary" href="{{ path('contacts_edit', { 'id': entity.id }) }}">
                 Edit
-            </a>
-        </li>
-        <li>{{ form(delete_form) }}</li>
-    </ul>
-
+            </a>            
+        </div>
+        <div>
+            {{ form_start(delete_form) }}
+                {{ form_row(delete_form.submit, { 'attr':{'class':'btn btn-primary'} }) }}
+            {{ form_end(delete_form) }}
+        </div>
+    </div>
+    <style type="text/css">    
+        .btn-group div { display: inline-block }
+    </style>
+    
 </section>
-
-<style type="text/css">
-    .record_actions { padding-left: 0px; }
-    .record_actions li { display: inline-block ; }
-</style>
 
 {% endblock %}

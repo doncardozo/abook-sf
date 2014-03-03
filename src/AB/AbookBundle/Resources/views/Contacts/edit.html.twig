@@ -1,5 +1,7 @@
 {% extends "AbookBundle:Layout:layout.html.twig" %}
 
+{% block stylesheet %}{% endblock %}
+
 {% block title %}Add Contact{% endblock %}
 
 {% block body -%}
@@ -10,11 +12,11 @@
 
             {{ form_start(edit_form) }}
 
-                {{ form_row(edit_form.firstName) }}
-                {{ form_row(edit_form.lastName) }}
-                {{ form_row(edit_form.address) }}
-                {{ form_row(edit_form.category) }}
-                {{ form_row(edit_form.active) }}
+                {{ form_row(edit_form.firstName, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(edit_form.lastName, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(edit_form.address, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(edit_form.category, { 'attr':{'class':'form-control'} }) }}
+                {{ form_row(edit_form.active, { 'attr':{'class':'form-control'} }) }}
 
                 <ul class="tags" data-prototype="{{ form_widget(edit_form.emails.vars.prototype)|e }}">
                     {{ form_widget(edit_form.emails.vars.prototype.email)|e }}
@@ -23,7 +25,10 @@
                 <ul class="tags2" data-prototype="{{ form_widget(edit_form.phones.vars.prototype)|e }}">
                     {{ form_widget(edit_form.phones.vars.prototype.phoneNumber)|e }}
                 </ul><br />
-
+                
+                
+                {{ form_row(edit_form.submit, { 'attr':{'class':'btn btn-primary'} }) }}
+                
             {{ form_end(edit_form) }}
 
     </fieldset>
