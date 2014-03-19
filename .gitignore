@@ -2,3 +2,6 @@
 nbproject
 app/logs
 app/cache
+.buildpath
+.project
+.settings
