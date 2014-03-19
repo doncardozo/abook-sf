@@ -30,7 +30,7 @@ class ContactsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AbookBundle:Contacts')->fetchAll();
-
+        
         return array(
             'entities' => $entities,
         );
@@ -136,11 +136,11 @@ class ContactsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AbookBundle:Contacts')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Contacts entity.');
         }
-
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 

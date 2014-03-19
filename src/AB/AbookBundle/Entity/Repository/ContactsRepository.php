@@ -78,7 +78,7 @@ SQL;
             # Phones
             if(!is_null($entity->getPhones())){
                 
-                $contactsPhones = $this->fetchPhonesByContactId($entity->getId()); 
+                $contactsPhones = $this->fetchPhonesByContactId($entity->getId());
                 
                 if(sizeof($contactsPhones) == 0){
                     #insert
@@ -197,18 +197,7 @@ SQL;
     
 SQL;
         $em = $this->getEntityManager()->getConnection();    
-        $result = $em->fetchAll($select);
-        
-        $phones = new \AB\AbookBundle\Entity\ContactsPhones();
-        
-        foreach($result as $r){
-            $phones->setId($r['id']);
-            $phones->setPhoneNumber($r['phoneNumber']);
-            $phones->setContact($r['contact']);
-            $phones->setActive($r['active']);                   
-        }
-        
-        return $phones;
+        return $em->fetchAll($select);
     }
 
 }
